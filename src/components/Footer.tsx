@@ -31,7 +31,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand & Description */}
           <div className="space-y-4">
-            <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            <div className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
               Portfolio
             </div>
             <p className="text-gray-400 leading-relaxed">
@@ -77,7 +77,7 @@ const Footer = () => {
                 <a
                   key={social.name}
                   href={social.url}
-                  className="w-10 h-10 bg-gray-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-600 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-all duration-300"
+                  className="w-10 h-10 bg-gray-800 hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-600 rounded-lg flex items-center justify-center text-gray-400 hover:text-white transition-all duration-300"
                   aria-label={social.name}
                 >
                   {/* Icon placeholder - you can replace with actual social icons */}

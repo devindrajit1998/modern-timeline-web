@@ -95,7 +95,7 @@ const Projects = () => {
     <section id="projects" className="py-20 bg-gray-800/50">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
             Featured Projects
           </h2>
 
@@ -117,7 +117,7 @@ const Projects = () => {
                 </div>
                 
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors duration-300">
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-green-400 transition-colors duration-300">
                     {project.title}
                   </h3>
                   <p className="text-gray-300 mb-4">{project.description}</p>
@@ -126,7 +126,7 @@ const Projects = () => {
                     {project.technologies.slice(0, 3).map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-blue-500/30 rounded-full text-blue-300 text-sm"
+                        className="px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-full text-green-300 text-sm"
                       >
                         {tech}
                       </span>

@@ -60,7 +60,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose })
             <ul className="space-y-2">
               {project.features.map((feature, index) => (
                 <li key={index} className="text-gray-300 flex items-start">
-                  <span className="text-blue-400 mr-2">•</span>
+                  <span className="text-green-400 mr-2">•</span>
                   {feature}
                 </li>
               ))}
@@ -74,7 +74,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose })
               {project.technologies.map((tech, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-blue-500/30 rounded-full text-blue-300 text-sm"
+                  className="px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-full text-green-300 text-sm"
                 >
                   {tech}
                 </span>
@@ -89,7 +89,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose })
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg text-white font-semibold hover:scale-105 transition-transform duration-300"
+                className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white font-semibold hover:scale-105 transition-transform duration-300"
               >
                 View Live Demo
               </a>
