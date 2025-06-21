@@ -12,7 +12,7 @@ const Projects = () => {
       title: 'E-Commerce Platform',
       description: 'A modern e-commerce platform built with React and Node.js',
       fullDescription: 'A comprehensive e-commerce solution featuring user authentication, product catalog, shopping cart, payment integration, and admin dashboard. Built with modern technologies to ensure scalability and performance.',
-      image: '/api/placeholder/600/400',
+      image: '/api/placeholder/400/250',
       technologies: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Tailwind CSS'],
       liveUrl: 'https://example.com',
       githubUrl: 'https://github.com',
@@ -30,7 +30,7 @@ const Projects = () => {
       title: 'Task Management App',
       description: 'A collaborative task management application with real-time updates',
       fullDescription: 'A powerful task management application that enables teams to collaborate effectively. Features real-time updates, drag-and-drop functionality, and comprehensive project tracking capabilities.',
-      image: '/api/placeholder/600/400',
+      image: '/api/placeholder/400/250',
       technologies: ['React', 'TypeScript', 'Socket.io', 'Express', 'PostgreSQL'],
       liveUrl: 'https://example.com',
       githubUrl: 'https://github.com',
@@ -48,7 +48,7 @@ const Projects = () => {
       title: 'Weather Dashboard',
       description: 'A beautiful weather dashboard with interactive maps',
       fullDescription: 'An intuitive weather dashboard that provides comprehensive weather information with interactive maps, forecasts, and location-based weather alerts.',
-      image: '/api/placeholder/600/400',
+      image: '/api/placeholder/400/250',
       technologies: ['React', 'D3.js', 'Weather API', 'Mapbox', 'Chart.js'],
       liveUrl: 'https://example.com',
       githubUrl: 'https://github.com',
@@ -66,7 +66,7 @@ const Projects = () => {
       title: 'Social Media Dashboard',
       description: 'Analytics dashboard for social media management',
       fullDescription: 'A comprehensive social media analytics dashboard that helps businesses track their social media performance across multiple platforms with detailed insights and reporting.',
-      image: '/api/placeholder/600/400',
+      image: '/api/placeholder/400/250',
       technologies: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'Chart.js'],
       liveUrl: 'https://example.com',
       githubUrl: 'https://github.com',
@@ -92,14 +92,14 @@ const Projects = () => {
   };
 
   return (
-    <section id="projects" className="py-20 bg-gray-800/50">
+    <section id="projects" className="py-16 bg-gray-800/50">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold text-center mb-12 bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
             Featured Projects
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, index) => (
               <div
                 key={project.id}
@@ -111,29 +111,29 @@ const Projects = () => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-green-400 transition-colors duration-300">
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-green-400 transition-colors duration-300">
                     {project.title}
                   </h3>
-                  <p className="text-gray-300 mb-4">{project.description}</p>
+                  <p className="text-gray-300 mb-3 text-sm">{project.description}</p>
                   
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1">
                     {project.technologies.slice(0, 3).map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className="px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-full text-green-300 text-sm"
+                        className="px-2 py-1 bg-gradient-to-r from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-full text-green-300 text-xs"
                       >
                         {tech}
                       </span>
                     ))}
                     {project.technologies.length > 3 && (
-                      <span className="px-3 py-1 bg-gray-700 rounded-full text-gray-400 text-sm">
-                        +{project.technologies.length - 3} more
+                      <span className="px-2 py-1 bg-gray-700 rounded-full text-gray-400 text-xs">
+                        +{project.technologies.length - 3}
                       </span>
                     )}
                   </div>
