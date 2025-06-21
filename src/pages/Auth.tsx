@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, Mail, Lock, User, Sparkles } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Code2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Auth = () => {
@@ -72,56 +72,56 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated background elements */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Subtle animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-green-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-cyan-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
       <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center rotate-12 hover:rotate-0 transition-transform duration-300">
-              <Sparkles className="w-8 h-8 text-white" />
+        <div className="text-center mb-6 animate-fade-in">
+          <div className="flex items-center justify-center mb-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-xl flex items-center justify-center rotate-12 hover:rotate-0 transition-transform duration-300">
+              <Code2 className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-2">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent mb-1">
             Portfolio Admin
           </h1>
-          <p className="text-gray-400">Manage your professional presence</p>
+          <p className="text-slate-400 text-sm">Manage your professional presence</p>
         </div>
 
-        <Card className="bg-gray-800/50 backdrop-blur-lg border-gray-700/50 shadow-2xl animate-scale-in">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-2xl text-center text-white">
+        <Card className="bg-slate-900/50 backdrop-blur-lg border-slate-700/50 shadow-2xl animate-scale-in">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-xl text-center text-white">
               {isLogin ? 'Welcome Back' : 'Create Account'}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Tabs value={isLogin ? 'login' : 'signup'} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-gray-700/50 mb-6">
+              <TabsList className="grid w-full grid-cols-2 bg-slate-800/50 mb-4">
                 <TabsTrigger 
                   value="login" 
                   onClick={() => setIsLogin(true)}
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white transition-all duration-300"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-violet-500 data-[state=active]:text-white transition-all duration-300 text-sm"
                 >
                   Sign In
                 </TabsTrigger>
                 <TabsTrigger 
                   value="signup" 
                   onClick={() => setIsLogin(false)}
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white transition-all duration-300"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-violet-500 data-[state=active]:text-white transition-all duration-300 text-sm"
                 >
                   Sign Up
                 </TabsTrigger>
               </TabsList>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3">
                 {!isLogin && (
-                  <div className="space-y-2 animate-fade-in">
-                    <Label htmlFor="name" className="text-gray-300 flex items-center gap-2">
+                  <div className="space-y-1.5 animate-fade-in">
+                    <Label htmlFor="name" className="text-slate-300 flex items-center gap-2 text-sm">
                       <User className="w-4 h-4" />
                       Full Name
                     </Label>
@@ -130,15 +130,15 @@ const Auth = () => {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500/20 transition-all duration-300"
+                      className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/20 transition-all duration-300 h-9"
                       placeholder="Enter your full name"
                       required={!isLogin}
                     />
                   </div>
                 )}
 
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-300 flex items-center gap-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="text-slate-300 flex items-center gap-2 text-sm">
                     <Mail className="w-4 h-4" />
                     Email
                   </Label>
@@ -147,14 +147,14 @@ const Auth = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500/20 transition-all duration-300"
+                    className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/20 transition-all duration-300 h-9"
                     placeholder="Enter your email"
                     required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-gray-300 flex items-center gap-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="password" className="text-slate-300 flex items-center gap-2 text-sm">
                     <Lock className="w-4 h-4" />
                     Password
                   </Label>
@@ -164,14 +164,14 @@ const Auth = () => {
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="bg-gray-700/50 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-purple-500/20 pr-10 transition-all duration-300"
+                      className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/20 pr-10 transition-all duration-300 h-9"
                       placeholder="Enter your password"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -181,7 +181,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white font-medium py-2 rounded-md transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none h-9 text-sm"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
@@ -195,12 +195,12 @@ const Auth = () => {
               </form>
             </Tabs>
 
-            <div className="mt-6 text-center">
-              <p className="text-gray-400 text-sm">
+            <div className="mt-4 text-center">
+              <p className="text-slate-400 text-sm">
                 {isLogin ? "Don't have an account?" : "Already have an account?"}
                 <button
                   onClick={() => setIsLogin(!isLogin)}
-                  className="text-purple-400 hover:text-purple-300 ml-1 font-medium transition-colors duration-300"
+                  className="text-indigo-400 hover:text-indigo-300 ml-1 font-medium transition-colors duration-300"
                 >
                   {isLogin ? 'Sign up' : 'Sign in'}
                 </button>
@@ -209,10 +209,10 @@ const Auth = () => {
           </CardContent>
         </Card>
 
-        <div className="text-center mt-6">
+        <div className="text-center mt-4">
           <button
             onClick={() => navigate('/')}
-            className="text-gray-400 hover:text-white transition-colors duration-300 text-sm"
+            className="text-slate-400 hover:text-white transition-colors duration-300 text-sm"
           >
             ← Back to Portfolio
           </button>

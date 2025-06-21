@@ -9,20 +9,20 @@ const Hero = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/20 via-transparent to-emerald-900/20"></div>
+    <section id="home" className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pt-16">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-violet-900/10"></div>
       
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="animate-fade-in">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
             <span className="text-white">I am </span>
-            <span className="bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent">
               Indrajit
             </span>
           </h1>
-          <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-300 mb-6 md:mb-8 h-12 md:h-16 flex items-center justify-center">
+          <div className="text-lg sm:text-xl md:text-2xl text-slate-300 mb-6 h-12 flex items-center justify-center">
             <span className="text-white mr-2">A </span>
-            <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent font-semibold">
+            <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent font-medium">
               <Typewriter
                 options={{
                   strings: [
@@ -38,17 +38,17 @@ const Hero = () => {
               />
             </span>
           </div>
-          <p className="text-base sm:text-lg md:text-xl text-gray-400 mb-6 md:mb-8 max-w-3xl mx-auto px-4">
+          <p className="text-sm sm:text-base md:text-lg text-slate-400 mb-6 max-w-2xl mx-auto">
             Crafting beautiful, interactive web experiences with modern technologies
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button 
               onClick={scrollToAbout}
-              className="px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full text-white font-semibold hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-green-500/25 text-sm md:text-base"
+              className="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-lg text-white text-sm font-medium hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-indigo-500/20"
             >
               View My Work
             </button>
-            <button className="px-6 md:px-8 py-3 md:py-4 border border-gray-400 rounded-full text-gray-300 font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300 text-sm md:text-base">
+            <button className="px-5 py-2.5 border border-slate-600 rounded-lg text-slate-300 text-sm font-medium hover:bg-slate-800 hover:text-white transition-all duration-300">
               Download CV
             </button>
           </div>
@@ -57,10 +57,9 @@ const Hero = () => {
 
       <button
         onClick={scrollToAbout}
-        className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 text-gray-400 hover:text-white transition-colors duration-300 animate-bounce"
+        className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-slate-400 hover:text-white transition-colors duration-300 animate-bounce"
       >
-        <ArrowDown size={20} className="md:hidden" />
-        <ArrowDown size={24} className="hidden md:block" />
+        <ArrowDown size={20} />
       </button>
     </section>
   );
