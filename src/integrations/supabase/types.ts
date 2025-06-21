@@ -9,7 +9,180 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      education: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          institution: string
+          period: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          institution: string
+          period?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          institution?: string
+          period?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      experience: {
+        Row: {
+          company: string
+          created_at: string | null
+          description: string | null
+          id: string
+          period: string | null
+          technologies: string[] | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          company: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          period?: string | null
+          technologies?: string[] | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          company?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          period?: string | null
+          technologies?: string[] | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          avatar_url: string | null
+          bio: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          phone?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          created_at: string | null
+          demo_url: string | null
+          description: string | null
+          featured: boolean | null
+          github_url: string | null
+          id: string
+          image_url: string | null
+          technologies: string[] | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          demo_url?: string | null
+          description?: string | null
+          featured?: boolean | null
+          github_url?: string | null
+          id?: string
+          image_url?: string | null
+          technologies?: string[] | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          demo_url?: string | null
+          description?: string | null
+          featured?: boolean | null
+          github_url?: string | null
+          id?: string
+          image_url?: string | null
+          technologies?: string[] | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      skills: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          id: string
+          name: string
+          proficiency: number | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+          proficiency?: number | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          proficiency?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
