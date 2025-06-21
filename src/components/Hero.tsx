@@ -2,10 +2,24 @@
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
 import Typewriter from 'typewriter-effect';
+import { useProfile } from '@/hooks/useProfile';
 
 const Hero = () => {
+  const { data: profile } = useProfile();
+
   const scrollToAbout = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const getTypewriterStrings = () => {
+    if (profile?.title) {
+      return [profile.title];
+    }
+    return [
+      'Frontend Developer',
+      'React.js Developer', 
+      'HTML Developer'
+    ];
   };
 
   return (
@@ -19,7 +33,7 @@ const Hero = () => {
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-8 animate-slide-in-left">
             <span className="text-white block mb-2">I am</span>
             <span className="bg-gradient-to-r from-emerald-400 via-green-300 to-teal-400 bg-clip-text text-transparent font-extrabold tracking-tight">
-              Indrajit
+              {profile?.name || 'Indrajit'}
             </span>
           </h1>
           
@@ -29,11 +43,7 @@ const Hero = () => {
             <span className="bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent font-semibold">
               <Typewriter
                 options={{
-                  strings: [
-                    'Frontend Developer',
-                    'React.js Developer', 
-                    'HTML Developer'
-                  ],
+                  strings: getTypewriterStrings(),
                   autoStart: true,
                   loop: true,
                   deleteSpeed: 30,

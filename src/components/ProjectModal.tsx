@@ -1,17 +1,15 @@
 
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, ExternalLink, Github } from 'lucide-react';
 
 interface Project {
-  id: number;
+  id: string;
   title: string;
   description: string;
-  fullDescription: string;
-  image: string;
-  technologies: string[];
-  liveUrl?: string;
-  githubUrl?: string;
-  features: string[];
+  image_url?: string;
+  technologies?: string[];
+  demo_url?: string;
+  github_url?: string;
 }
 
 interface ProjectModalProps {
@@ -40,67 +38,62 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, isOpen, onClose })
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Project Image */}
-          <div className="rounded-lg overflow-hidden">
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-64 object-cover"
-            />
-          </div>
+          {project.image_url && (
+            <div className="rounded-lg overflow-hidden">
+              <img
+                src={project.image_url}
+                alt={project.title}
+                className="w-full h-64 object-cover"
+              />
+            </div>
+          )}
 
           {/* Description */}
-          <div>
-            <h3 className="text-xl font-semibold text-white mb-3">About This Project</h3>
-            <p className="text-gray-300 leading-relaxed">{project.fullDescription}</p>
-          </div>
-
-          {/* Features */}
-          <div>
-            <h3 className="text-xl font-semibold text-white mb-3">Key Features</h3>
-            <ul className="space-y-2">
-              {project.features.map((feature, index) => (
-                <li key={index} className="text-gray-300 flex items-start">
-                  <span className="text-green-400 mr-2">•</span>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {project.description && (
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-3">About This Project</h3>
+              <p className="text-gray-300 leading-relaxed">{project.description}</p>
+            </div>
+          )}
 
           {/* Technologies */}
-          <div>
-            <h3 className="text-xl font-semibold text-white mb-3">Technologies Used</h3>
-            <div className="flex flex-wrap gap-2">
-              {project.technologies.map((tech, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-full text-green-300 text-sm"
-                >
-                  {tech}
-                </span>
-              ))}
+          {project.technologies && project.technologies.length > 0 && (
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-3">Technologies Used</h3>
+              <div className="flex flex-wrap gap-2">
+                {project.technologies.map((tech, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-gradient-to-r from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-full text-green-300 text-sm"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex gap-4 pt-4">
-            {project.liveUrl && (
+            {project.demo_url && (
               <a
-                href={project.liveUrl}
+                href={project.demo_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white font-semibold hover:scale-105 transition-transform duration-300"
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white font-semibold hover:scale-105 transition-transform duration-300"
               >
+                <ExternalLink size={16} />
                 View Live Demo
               </a>
             )}
-            {project.githubUrl && (
+            {project.github_url && (
               <a
-                href={project.githubUrl}
+                href={project.github_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 border border-gray-400 rounded-lg text-gray-300 font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300"
+                className="flex items-center gap-2 px-6 py-3 border border-gray-400 rounded-lg text-gray-300 font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300"
               >
+                <Github size={16} />
                 View Code
               </a>
             )}
