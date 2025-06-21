@@ -28,10 +28,10 @@ const Experience = () => {
   ];
 
   return (
-    <section id="experience" className="py-16 bg-slate-800/20">
+    <section id="experience" className="py-20 bg-gray-800/30">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12 bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent animate-fade-up">
             Work Experience
           </h2>
           <Timeline items={experiences} />

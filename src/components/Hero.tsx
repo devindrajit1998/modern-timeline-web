@@ -9,20 +9,20 @@ const Hero = () => {
   };
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 pt-16">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-violet-900/10"></div>
+    <section id="home" className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-gray-950 via-emerald-950 to-gray-950 pt-16">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-green-900/10"></div>
       
       <div className="container mx-auto px-4 text-center relative z-10">
-        <div className="animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+        <div className="animate-fade-up">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-in-left">
             <span className="text-white">I am </span>
-            <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-400 via-green-300 to-teal-400 bg-clip-text text-transparent animate-glow">
               Indrajit
             </span>
           </h1>
-          <div className="text-lg sm:text-xl md:text-2xl text-slate-300 mb-6 h-12 flex items-center justify-center">
-            <span className="text-white mr-2">A </span>
-            <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent font-medium">
+          <div className="text-xl sm:text-2xl md:text-3xl text-gray-300 mb-8 h-16 flex items-center justify-center animate-slide-in-right">
+            <span className="text-white mr-3">A </span>
+            <span className="bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent font-semibold">
               <Typewriter
                 options={{
                   strings: [
@@ -32,23 +32,23 @@ const Hero = () => {
                   ],
                   autoStart: true,
                   loop: true,
-                  deleteSpeed: 50,
-                  delay: 75,
+                  deleteSpeed: 30,
+                  delay: 50,
                 }}
               />
             </span>
           </div>
-          <p className="text-sm sm:text-base md:text-lg text-slate-400 mb-6 max-w-2xl mx-auto">
-            Crafting beautiful, interactive web experiences with modern technologies
+          <p className="text-base sm:text-lg md:text-xl text-gray-400 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-up">
+            Crafting beautiful, interactive web experiences with modern technologies and seamless animations
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up">
             <button 
               onClick={scrollToAbout}
-              className="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-lg text-white text-sm font-medium hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-indigo-500/20"
+              className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-green-400 rounded-xl text-white font-medium hover:from-emerald-600 hover:to-green-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/30 hover-lift animate-glow"
             >
               View My Work
             </button>
-            <button className="px-5 py-2.5 border border-slate-600 rounded-lg text-slate-300 text-sm font-medium hover:bg-slate-800 hover:text-white transition-all duration-300">
+            <button className="px-8 py-3 border-2 border-emerald-500/50 rounded-xl text-emerald-300 font-medium hover:bg-emerald-900/30 hover:border-emerald-400 transition-all duration-300 hover-lift">
               Download CV
             </button>
           </div>
@@ -57,9 +57,9 @@ const Hero = () => {
 
       <button
         onClick={scrollToAbout}
-        className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-slate-400 hover:text-white transition-colors duration-300 animate-bounce"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-emerald-400 hover:text-emerald-300 transition-all duration-300 animate-bounce"
       >
-        <ArrowDown size={20} />
+        <ArrowDown size={24} className="animate-float" />
       </button>
     </section>
   );
