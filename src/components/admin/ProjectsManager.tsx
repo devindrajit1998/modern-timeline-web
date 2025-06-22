@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Trash2, Plus, Edit } from 'lucide-react';
+import { Trash2, Plus, Edit, Upload, X, Image } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Project {
@@ -36,6 +36,9 @@ const ProjectsManager = () => {
     featured: false,
   });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -139,6 +142,78 @@ const ProjectsManager = () => {
 
   const projectToEdit = editingProject || newProject;
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select an image file');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size must be less than 5MB');
+        return;
+      }
+      
+      setSelectedFile(file);
+      
+      // Create preview URL
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!selectedFile || !user) return;
+
+    setUploading(true);
+    try {
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${user.id}/project-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('portfolio-images')
+        .upload(fileName, selectedFile);
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('portfolio-images')
+        .getPublicUrl(fileName);
+
+      // Update project with new image URL
+      if (editingProject) {
+        setEditingProject({ ...editingProject, image_url: publicUrl });
+      } else {
+        setNewProject(prev => ({ ...prev, image_url: publicUrl }));
+      }
+      
+      // Clear selected file and preview
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      
+      toast.success('Image uploaded successfully!');
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast.error(`Failed to upload image: ${error.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    if (editingProject) {
+      setEditingProject({ ...editingProject, image_url: '' });
+    } else {
+      setNewProject(prev => ({ ...prev, image_url: '' }));
+    }
+    setSelectedFile(null);
+    setPreviewUrl(null);
+  };
+
   return (
     <div className="space-y-6">
       <Card className="bg-gray-800 border-gray-700">
@@ -164,18 +239,83 @@ const ProjectsManager = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Image URL</label>
-              <Input
-                value={projectToEdit.image_url}
-                onChange={(e) => {
-                  if (editingProject) {
-                    setEditingProject({ ...editingProject, image_url: e.target.value });
-                  } else {
-                    setNewProject(prev => ({ ...prev, image_url: e.target.value }));
-                  }
-                }}
-                className="bg-gray-700 border-gray-600 text-white"
-              />
+              <label className="block text-sm font-medium text-gray-300 mb-2">Project Image</label>
+              
+              {/* Current Image Display */}
+              {projectToEdit.image_url && !selectedFile && (
+                <div className="mb-4">
+                  <div className="relative inline-block">
+                    <img
+                      src={projectToEdit.image_url}
+                      alt="Project"
+                      className="w-32 h-20 rounded-lg object-cover border-2 border-gray-600"
+                    />
+                    <button
+                      onClick={removeImage}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white text-xs transition-colors"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              {/* File Upload */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    id="project-image-upload"
+                  />
+                  <label
+                    htmlFor="project-image-upload"
+                    className="flex items-center space-x-2 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white cursor-pointer hover:bg-gray-600 transition-colors"
+                  >
+                    <Upload size={16} />
+                    <span>Choose Image</span>
+                  </label>
+                  
+                  {selectedFile && (
+                    <Button
+                      onClick={handleImageUpload}
+                      disabled={uploading}
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      {uploading ? 'Uploading...' : 'Upload'}
+                    </Button>
+                  )}
+                </div>
+                
+                {/* Preview */}
+                {previewUrl && (
+                  <div className="relative inline-block">
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="w-32 h-20 rounded-lg object-cover border-2 border-gray-600"
+                    />
+                    <button
+                      onClick={() => {
+                        setSelectedFile(null);
+                        setPreviewUrl(null);
+                      }}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white text-xs transition-colors"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                )}
+                
+                {!projectToEdit.image_url && !selectedFile && (
+                  <div className="w-32 h-20 rounded-lg bg-gray-700 border-2 border-gray-600 flex items-center justify-center">
+                    <Image size={24} className="text-gray-400" />
+                  </div>
+                )}
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">Demo URL</label>

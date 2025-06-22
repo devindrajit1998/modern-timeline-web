@@ -1,13 +1,17 @@
-
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Loader2 } from 'lucide-react';
+import { useProfile } from '@/hooks/useProfile';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const Contact = () => {
+  const { data: profile, isLoading, isError } = useProfile();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -16,12 +20,27 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    // Reset form
-    setFormData({ name: '', email: '', message: '' });
+    setIsSubmitting(true);
+
+    try {
+      const { data, error } = await supabase
+        .from('contact_submissions')
+        .insert([formData]);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      toast.success('Message sent successfully!');
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast.error('Failed to send message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -32,6 +51,19 @@ const Contact = () => {
             Get In Touch
           </h2>
 
+          {isLoading && (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="animate-spin text-emerald-400" size={48} />
+            </div>
+          )}
+
+          {isError && (
+            <div className="text-center py-20 text-red-400">
+              <p className="text-xl">Could not load contact information.</p>
+            </div>
+          )}
+
+          {!isLoading && !isError && (
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Info */}
             <div className="space-y-8">
@@ -50,7 +82,9 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-semibold">Email</h4>
-                    <p className="text-gray-300">john.doe@example.com</p>
+                    <a href={`mailto:${profile?.email}`} className="text-gray-300 hover:text-emerald-400 transition-colors duration-300">
+                      {profile?.email || 'john.doe@example.com'}
+                    </a>
                   </div>
                 </div>
 
@@ -60,7 +94,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-semibold">Phone</h4>
-                    <p className="text-gray-300">+1 (555) 123-4567</p>
+                    <p className="text-gray-300">{profile?.phone || '+1 (555) 123-4567'}</p>
                   </div>
                 </div>
 
@@ -70,7 +104,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-semibold">Location</h4>
-                    <p className="text-gray-300">San Francisco, CA</p>
+                    <p className="text-gray-300">{profile?.address || 'San Francisco, CA'}</p>
                   </div>
                 </div>
               </div>
@@ -129,14 +163,25 @@ const Contact = () => {
 
                 <button
                   type="submit"
-                  className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white font-semibold hover:scale-105 transition-transform duration-300 flex items-center justify-center space-x-2"
+                  disabled={isSubmitting}
+                  className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg text-white font-semibold hover:scale-105 transition-transform duration-300 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send size={20} />
-                  <span>Send Message</span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="animate-spin" size={20} />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send size={20} />
+                      <span>Send Message</span>
+                    </>
+                  )}
                 </button>
               </form>
             </div>
           </div>
+          )}
         </div>
       </div>
     </section>

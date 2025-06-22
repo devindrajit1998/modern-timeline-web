@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,6 +15,10 @@ interface Education {
   institution: string;
   period: string;
   description: string;
+  key_subjects: string[];
+  grade: string;
+  final_project: string;
+  clubs: string;
 }
 
 const EducationManager = () => {
@@ -27,6 +30,10 @@ const EducationManager = () => {
     institution: '',
     period: '',
     description: '',
+    key_subjects: [] as string[],
+    grade: '',
+    final_project: '',
+    clubs: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -63,12 +70,16 @@ const EducationManager = () => {
     }
 
     try {
+      const { key_subjects, ...restOfData } = educationData as any; // Cast to avoid TS errors
+      
+      const subjectsArray = typeof key_subjects === 'string' 
+        ? key_subjects.split(',').map(s => s.trim())
+        : (Array.isArray(key_subjects) ? key_subjects : []);
+
       const dataToSave = {
+        ...restOfData,
         user_id: user?.id,
-        title: educationData.title,
-        institution: educationData.institution,
-        period: educationData.period,
-        description: educationData.description,
+        key_subjects: subjectsArray,
       };
 
       if (editingEducation) {
@@ -92,6 +103,10 @@ const EducationManager = () => {
           institution: '',
           period: '',
           description: '',
+          key_subjects: [],
+          grade: '',
+          final_project: '',
+          clubs: '',
         });
       }
 
@@ -117,7 +132,15 @@ const EducationManager = () => {
     }
   };
 
-  const educationToEdit = editingEducation || newEducation;
+  const educationToEdit = editingEducation || { ...newEducation, id: '', description: '' };
+  
+  const handleFormChange = (field: string, value: string) => {
+    if (editingEducation) {
+      setEditingEducation({ ...editingEducation, [field]: value });
+    } else {
+      setNewEducation(prev => ({ ...prev, [field]: value }));
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -133,13 +156,7 @@ const EducationManager = () => {
               <label className="block text-sm font-medium text-gray-300 mb-2">Title/Degree *</label>
               <Input
                 value={educationToEdit.title}
-                onChange={(e) => {
-                  if (editingEducation) {
-                    setEditingEducation({ ...editingEducation, title: e.target.value });
-                  } else {
-                    setNewEducation(prev => ({ ...prev, title: e.target.value }));
-                  }
-                }}
+                onChange={(e) => handleFormChange('title', e.target.value)}
                 className="bg-gray-700 border-gray-600 text-white"
                 placeholder="Bachelor of Computer Science"
               />
@@ -148,13 +165,7 @@ const EducationManager = () => {
               <label className="block text-sm font-medium text-gray-300 mb-2">Institution *</label>
               <Input
                 value={educationToEdit.institution}
-                onChange={(e) => {
-                  if (editingEducation) {
-                    setEditingEducation({ ...editingEducation, institution: e.target.value });
-                  } else {
-                    setNewEducation(prev => ({ ...prev, institution: e.target.value }));
-                  }
-                }}
+                onChange={(e) => handleFormChange('institution', e.target.value)}
                 className="bg-gray-700 border-gray-600 text-white"
                 placeholder="University Name"
               />
@@ -164,30 +175,47 @@ const EducationManager = () => {
             <label className="block text-sm font-medium text-gray-300 mb-2">Period</label>
             <Input
               value={educationToEdit.period}
-              onChange={(e) => {
-                if (editingEducation) {
-                  setEditingEducation({ ...editingEducation, period: e.target.value });
-                } else {
-                  setNewEducation(prev => ({ ...prev, period: e.target.value }));
-                }
-              }}
+              onChange={(e) => handleFormChange('period', e.target.value)}
               className="bg-gray-700 border-gray-600 text-white"
               placeholder="2017 - 2021"
             />
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Grade</label>
+              <Input
+                value={educationToEdit.grade || ''}
+                onChange={(e) => handleFormChange('grade', e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="CGPA: 8.2/10"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Final Project</label>
+              <Input
+                value={educationToEdit.final_project || ''}
+                onChange={(e) => handleFormChange('final_project', e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="IoT-based Smart Energy Meter"
+              />
+            </div>
+          </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
-            <Textarea
-              value={educationToEdit.description}
-              onChange={(e) => {
-                if (editingEducation) {
-                  setEditingEducation({ ...editingEducation, description: e.target.value });
-                } else {
-                  setNewEducation(prev => ({ ...prev, description: e.target.value }));
-                }
-              }}
-              className="bg-gray-700 border-gray-600 text-white min-h-24"
-              placeholder="Brief description of your education..."
+            <label className="block text-sm font-medium text-gray-300 mb-2">Key Subjects (comma-separated)</label>
+            <Input
+              value={Array.isArray(educationToEdit.key_subjects) ? educationToEdit.key_subjects.join(', ') : ''}
+              onChange={(e) => handleFormChange('key_subjects', e.target.value)}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="Power Systems, Control Systems, ML"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Clubs / Activities (use '|' to separate)</label>
+            <Input
+              value={educationToEdit.clubs || ''}
+              onChange={(e) => handleFormChange('clubs', e.target.value)}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="Robotics | TechFest Organizer"
             />
           </div>
           <div className="flex gap-2">
@@ -225,17 +253,17 @@ const EducationManager = () => {
                   <TableHead className="text-gray-300">Title</TableHead>
                   <TableHead className="text-gray-300">Institution</TableHead>
                   <TableHead className="text-gray-300">Period</TableHead>
-                  <TableHead className="text-gray-300">Actions</TableHead>
+                  <TableHead className="text-gray-300 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {education.map((edu) => (
                   <TableRow key={edu.id}>
-                    <TableCell className="text-white">{edu.title}</TableCell>
+                    <TableCell className="text-white font-medium">{edu.title}</TableCell>
                     <TableCell className="text-gray-300">{edu.institution}</TableCell>
                     <TableCell className="text-gray-300">{edu.period}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
+                    <TableCell className="text-right">
+                      <div className="flex gap-2 justify-end">
                         <Button
                           onClick={() => setEditingEducation(edu)}
                           variant="outline"

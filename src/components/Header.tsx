@@ -38,7 +38,7 @@ const Header = () => {
               <Code2 className="w-5 h-5 text-white" />
             </div>
             <div className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent">
-              Portfolio
+              Indrajit Ghosh
             </div>
           </div>
 

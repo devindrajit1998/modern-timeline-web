@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, Download } from 'lucide-react';
 import Typewriter from 'typewriter-effect';
 import { useProfile } from '@/hooks/useProfile';
 
@@ -8,18 +7,28 @@ const Hero = () => {
   const { data: profile } = useProfile();
 
   const scrollToAbout = () => {
-    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const getTypewriterStrings = () => {
-    if (profile?.title) {
-      return [profile.title];
+    if (profile?.title && Array.isArray(profile.title) && profile.title.length > 0) {
+      return profile.title.filter(t => t); // Filter out any empty strings
     }
     return [
       'Frontend Developer',
-      'React.js Developer', 
+      'React JS Developer', 
       'HTML Developer'
     ];
+  };
+
+  const handleDownloadCV = () => {
+    if (profile?.cv_url) {
+      // Open CV in new tab for download
+      window.open(profile.cv_url, '_blank');
+    } else {
+      // Fallback: you could show a toast or modal here
+      console.log('No CV available');
+    }
   };
 
   return (
@@ -30,10 +39,10 @@ const Hero = () => {
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="animate-fade-up max-w-4xl mx-auto">
           {/* Clean name display without dark box */}
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-8 animate-slide-in-left">
+          <h1 className="text-5xl sm:text-6xl font-bold mb-8 animate-slide-in-left">
             <span className="text-white block mb-2">I am</span>
             <span className="bg-gradient-to-r from-emerald-400 via-green-300 to-teal-400 bg-clip-text text-transparent font-extrabold tracking-tight">
-              {profile?.name || 'Indrajit'}
+              {profile?.name}
             </span>
           </h1>
           
@@ -66,7 +75,16 @@ const Hero = () => {
             >
               View My Work
             </button>
-            <button className="px-10 py-4 border-2 border-emerald-500/50 rounded-xl text-emerald-300 font-semibold text-lg hover:bg-emerald-900/30 hover:border-emerald-400 transition-all duration-300 hover-lift backdrop-blur-sm">
+            <button 
+              onClick={handleDownloadCV}
+              disabled={!profile?.cv_url}
+              className={`px-10 py-4 border-2 rounded-xl font-semibold text-lg transition-all duration-300 hover-lift backdrop-blur-sm flex items-center gap-2 ${
+                profile?.cv_url 
+                  ? 'border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/30 hover:border-emerald-400' 
+                  : 'border-gray-600/50 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              <Download size={20} />
               Download CV
             </button>
           </div>

@@ -1,9 +1,26 @@
-
 import React from 'react';
 import { useProfile } from '@/hooks/useProfile';
+import { useExperience } from '@/hooks/useExperience';
+import { useProjects } from '@/hooks/useProjects';
+import { Button } from '@/components/ui/button';
+import { Download, Briefcase, Code } from 'lucide-react';
+
+const StatCard = ({ icon, value, label }: { icon: React.ReactNode, value: string | number, label: string }) => (
+  <div className="text-center p-6 md:p-8 bg-gray-800/30 rounded-2xl border border-emerald-500/20 hover-lift transition-all duration-300 hover:border-emerald-400/40 backdrop-blur-sm">
+    <div className="flex items-center justify-center mb-3">
+      {icon}
+    </div>
+    <div className="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">{value}</div>
+    <div className="text-gray-400 font-medium">{label}</div>
+  </div>
+);
 
 const About = () => {
-  const { data: profile, isLoading, error } = useProfile();
+  const { data: profile, isLoading: profileLoading, error: profileError } = useProfile();
+  const { data: experiences, isLoading: expLoading, error: expError } = useExperience();
+  const { data: projects, isLoading: projectsLoading, error: projectsError } = useProjects();
+
+  const isLoading = profileLoading || expLoading || projectsLoading;
 
   if (isLoading) {
     return (
@@ -22,9 +39,21 @@ const About = () => {
     );
   }
 
-  if (error) {
-    console.error('Error loading profile:', error);
+  if (profileError || expError || projectsError) {
+    console.error('Error loading about section data:', { profileError, expError, projectsError });
+    // You might want to render a more user-friendly error message here
   }
+
+  const getYearFromPeriod = (period: string | null): number => {
+    if (!period) return new Date().getFullYear();
+    const yearStr = period.split(' ')[0];
+    const year = parseInt(yearStr, 10);
+    return isNaN(year) ? new Date().getFullYear() : year;
+  };
+
+  const yearsOfExperience = experiences?.length
+    ? new Date().getFullYear() - getYearFromPeriod(experiences[experiences.length - 1]?.period)
+    : 0;
 
   return (
     <section id="about" className="py-20 bg-gray-900/30">
@@ -33,17 +62,17 @@ const About = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent animate-fade-up">
             About Me
           </h2>
-          
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             {/* Profile Image */}
             <div className="animate-slide-in-left">
-              <div className="w-80 h-80 mx-auto md:mx-0 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-green-400/20 p-1 hover-lift backdrop-blur-sm border border-emerald-500/20">
+              <div className="relative group w-80 h-80 mx-auto md:mx-0 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-green-400/20 p-1 hover-lift backdrop-blur-sm border border-emerald-500/20">
                 <div className="w-full h-full rounded-3xl bg-gray-800/50 flex items-center justify-center backdrop-blur-sm">
                   {profile?.avatar_url ? (
-                    <img 
-                      src={profile.avatar_url} 
-                      alt="Profile" 
-                      className="w-[310px] h-[310px] rounded-3xl object-cover transition-transform duration-300 hover:scale-105"
+                    <img
+                      src={profile.avatar_url}
+                      alt="Profile"
+                      className="w-[310px] h-[310px] rounded-3xl object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <div className="w-[310px] h-[310px] rounded-3xl bg-gradient-to-br from-emerald-500/10 to-green-400/10 flex items-center justify-center">
@@ -55,41 +84,50 @@ const About = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Content */}
-            <div className="space-y-8 animate-slide-in-right">
-              <div className="space-y-6">
+            <div className="space-y-6 animate-slide-in-right">
+              <div className="space-y-4">
                 {profile?.bio ? (
-                  <p className="text-lg md:text-xl text-gray-300 leading-relaxed font-light">
-                    {profile.bio}
-                  </p>
+                  profile.bio.split('\n').map((paragraph, index) => (
+                    <p key={index} className="text-lg  text-gray-300 leading-relaxed font-light">
+                      {paragraph}
+                    </p>
+                  ))
                 ) : (
-                  <>
-                    <p className="text-lg md:text-xl text-gray-300 leading-relaxed font-light">
-                      I'm a passionate frontend developer with 5+ years of experience creating 
-                      beautiful, functional, and user-centered digital experiences. I love 
-                      bringing ideas to life through clean, efficient code and stunning animations.
-                    </p>
-                    <p className="text-lg md:text-xl text-gray-300 leading-relaxed font-light">
-                      My expertise spans modern JavaScript frameworks, responsive design, 
-                      and performance optimization. I'm always eager to learn new technologies 
-                      and tackle challenging problems with creative solutions.
-                    </p>
-                  </>
+                  <p className="text-lg md:text-xl text-gray-300 leading-relaxed font-light">
+                    Dynamic bio content is not available. Please update your profile.
+                  </p>
                 )}
               </div>
-              
+
               {/* Stats */}
-              <div className="grid grid-cols-2 gap-8 mt-12">
-                <div className="text-center p-8 bg-gray-800/30 rounded-2xl border border-emerald-500/20 hover-lift transition-all duration-300 hover:border-emerald-400/40 backdrop-blur-sm">
-                  <div className="text-4xl font-bold text-emerald-400 mb-3">50+</div>
-                  <div className="text-gray-400 font-medium">Projects Completed</div>
-                </div>
-                <div className="text-center p-8 bg-gray-800/30 rounded-2xl border border-green-500/20 hover-lift transition-all duration-300 hover:border-green-400/40 backdrop-blur-sm">
-                  <div className="text-4xl font-bold text-green-400 mb-3">5+</div>
-                  <div className="text-gray-400 font-medium">Years Experience</div>
-                </div>
+              <div className="grid grid-cols-2 gap-4 md:gap-8 mt-8">
+                <StatCard 
+                  icon={<Briefcase className="w-8 h-8 text-green-400" />} 
+                  value={`${yearsOfExperience}+`}
+                  label="Years Experience" 
+                />
+                <StatCard 
+                  icon={<Code className="w-8 h-8 text-green-400" />} 
+                  value={projects?.length || 0}
+                  label="Projects Completed" 
+                />
               </div>
+
+              {/* {profile?.cv_url && (
+                <div className="mt-8">
+                  <Button 
+                    asChild 
+                    className="group bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
+                  >
+                    <a href={profile.cv_url} target="_blank" rel="noopener noreferrer">
+                      <Download className="mr-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      Download CV
+                    </a>
+                  </Button>
+                </div>
+              )} */}
             </div>
           </div>
         </div>

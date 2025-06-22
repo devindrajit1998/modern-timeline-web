@@ -1,15 +1,15 @@
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LogOut, User, Briefcase, GraduationCap, Code, FolderOpen, Code2 } from 'lucide-react';
+import { LogOut, User, Briefcase, GraduationCap, Code, FolderOpen, Code2, Mail } from 'lucide-react';
 import ProfileManager from '@/components/admin/ProfileManager';
 import SkillsManager from '@/components/admin/SkillsManager';
 import ProjectsManager from '@/components/admin/ProjectsManager';
 import EducationManager from '@/components/admin/EducationManager';
 import ExperienceManager from '@/components/admin/ExperienceManager';
+import ContactManager from '@/components/admin/ContactManager';
 
 const Admin = () => {
   const { signOut, user } = useAuth();
@@ -25,6 +25,7 @@ const Admin = () => {
     { id: 'projects', label: 'Projects', icon: FolderOpen },
     { id: 'education', label: 'Education', icon: GraduationCap },
     { id: 'experience', label: 'Experience', icon: Briefcase },
+    { id: 'contact', label: 'Contact', icon: Mail },
   ];
 
   return (
@@ -73,7 +74,7 @@ const Admin = () => {
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
               {/* Mobile Tab Navigation */}
               <div className="lg:hidden p-4 pb-0">
-                <TabsList className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 bg-slate-800/50 p-1.5 h-auto">
+                <TabsList className="grid grid-cols-3 sm:grid-cols-3 gap-1.5 bg-slate-800/50 p-1.5 h-auto">
                   {tabs.map((tab) => {
                     const IconComponent = tab.icon;
                     return (
@@ -92,7 +93,7 @@ const Admin = () => {
 
               {/* Desktop Tab Navigation */}
               <div className="hidden lg:block p-4 pb-0">
-                <TabsList className="grid grid-cols-5 bg-slate-800/50 p-1.5">
+                <TabsList className="grid grid-cols-6 bg-slate-800/50 p-1.5">
                   {tabs.map((tab) => {
                     const IconComponent = tab.icon;
                     return (
@@ -129,6 +130,10 @@ const Admin = () => {
 
                 <TabsContent value="experience" className="mt-0 animate-fade-in">
                   <ExperienceManager />
+                </TabsContent>
+
+                <TabsContent value="contact" className="mt-0 animate-fade-in">
+                  <ContactManager />
                 </TabsContent>
               </div>
             </Tabs>

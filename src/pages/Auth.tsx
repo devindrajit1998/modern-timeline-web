@@ -1,23 +1,19 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, Mail, Lock, User, Code2 } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Code2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -32,32 +28,13 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      let result;
-      if (isLogin) {
-        result = await signIn(email, password);
-      } else {
-        if (!name.trim()) {
-          toast({
-            title: "Error",
-            description: "Please enter your name",
-            variant: "destructive",
-          });
-          setLoading(false);
-          return;
-        }
-        result = await signUp(email, password, name);
-      }
+      const result = await signIn(email, password);
 
       if (result.error) {
         toast({
           title: "Error",
           description: result.error.message,
           variant: "destructive",
-        });
-      } else if (!isLogin) {
-        toast({
-          title: "Success",
-          description: "Account created successfully! Please check your email to verify your account.",
         });
       }
     } catch (error) {
@@ -96,127 +73,70 @@ const Auth = () => {
         <Card className="bg-slate-900/50 backdrop-blur-lg border-slate-700/50 shadow-2xl animate-scale-in">
           <CardHeader className="pb-3">
             <CardTitle className="text-xl text-center text-white">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
+              Welcome Back
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs value={isLogin ? 'login' : 'signup'} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-slate-800/50 mb-4">
-                <TabsTrigger 
-                  value="login" 
-                  onClick={() => setIsLogin(true)}
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-violet-500 data-[state=active]:text-white transition-all duration-300 text-sm"
-                >
-                  Sign In
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="signup" 
-                  onClick={() => setIsLogin(false)}
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-violet-500 data-[state=active]:text-white transition-all duration-300 text-sm"
-                >
-                  Sign Up
-                </TabsTrigger>
-              </TabsList>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-slate-300 flex items-center gap-2 text-sm">
+                  <Mail className="w-4 h-4" />
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/20 transition-all duration-300 h-9"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
 
-              <form onSubmit={handleSubmit} className="space-y-3">
-                {!isLogin && (
-                  <div className="space-y-1.5 animate-fade-in">
-                    <Label htmlFor="name" className="text-slate-300 flex items-center gap-2 text-sm">
-                      <User className="w-4 h-4" />
-                      Full Name
-                    </Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/20 transition-all duration-300 h-9"
-                      placeholder="Enter your full name"
-                      required={!isLogin}
-                    />
-                  </div>
-                )}
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-slate-300 flex items-center gap-2 text-sm">
-                    <Mail className="w-4 h-4" />
-                    Email
-                  </Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-slate-300 flex items-center gap-2 text-sm">
+                  <Lock className="w-4 h-4" />
+                  Password
+                </Label>
+                <div className="relative">
                   <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/20 transition-all duration-300 h-9"
-                    placeholder="Enter your email"
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/20 pr-10 transition-all duration-300 h-9"
+                    placeholder="Enter your password"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
+              </div>
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="password" className="text-slate-300 flex items-center gap-2 text-sm">
-                    <Lock className="w-4 h-4" />
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-indigo-500 focus:ring-indigo-500/20 pr-10 transition-all duration-300 h-9"
-                      placeholder="Enter your password"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white font-medium py-2 rounded-md transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none h-9 text-sm"
+              >
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                    Signing In...
                   </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white font-medium py-2 rounded-md transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none h-9 text-sm"
-                >
-                  {loading ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                      {isLogin ? 'Signing In...' : 'Creating Account...'}
-                    </div>
-                  ) : (
-                    isLogin ? 'Sign In' : 'Create Account'
-                  )}
-                </Button>
-              </form>
-            </Tabs>
-
-            <div className="mt-4 text-center">
-              <p className="text-slate-400 text-sm">
-                {isLogin ? "Don't have an account?" : "Already have an account?"}
-                <button
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-indigo-400 hover:text-indigo-300 ml-1 font-medium transition-colors duration-300"
-                >
-                  {isLogin ? 'Sign up' : 'Sign in'}
-                </button>
-              </p>
-            </div>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+            </form>
           </CardContent>
         </Card>
-
-        <div className="text-center mt-4">
-          <button
-            onClick={() => navigate('/')}
-            className="text-slate-400 hover:text-white transition-colors duration-300 text-sm"
-          >
-            ← Back to Portfolio
-          </button>
-        </div>
       </div>
     </div>
   );

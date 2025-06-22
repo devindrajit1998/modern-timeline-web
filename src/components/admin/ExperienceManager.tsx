@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Trash2, Plus, Edit } from 'lucide-react';
+import { Trash2, Plus, Edit, Upload, X, Image } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Experience {
@@ -17,6 +16,9 @@ interface Experience {
   period: string;
   description: string;
   technologies: string[];
+  company_logo_url: string;
+  location_type: string;
+  team_size: string;
 }
 
 const ExperienceManager = () => {
@@ -29,8 +31,14 @@ const ExperienceManager = () => {
     period: '',
     description: '',
     technologies: '',
+    company_logo_url: '',
+    location_type: '',
+    team_size: '',
   });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -78,6 +86,9 @@ const ExperienceManager = () => {
         period: experienceData.period,
         description: experienceData.description,
         technologies,
+        company_logo_url: experienceData.company_logo_url,
+        location_type: experienceData.location_type,
+        team_size: experienceData.team_size,
       };
 
       if (editingExperience) {
@@ -102,6 +113,9 @@ const ExperienceManager = () => {
           period: '',
           description: '',
           technologies: '',
+          company_logo_url: '',
+          location_type: '',
+          team_size: '',
         });
       }
 
@@ -128,6 +142,73 @@ const ExperienceManager = () => {
   };
 
   const experienceToEdit = editingExperience || newExperience;
+
+  const handleCancelEdit = () => {
+    setEditingExperience(null);
+    setSelectedFile(null);
+    setPreviewUrl(null);
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select an image file');
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit
+        toast.error('Image size must be less than 2MB');
+        return;
+      }
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!selectedFile || !user) return;
+
+    setUploading(true);
+    try {
+      const fileExt = selectedFile.name.split('.').pop();
+      const fileName = `${user.id}/logo-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('portfolio-images')
+        .upload(fileName, selectedFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('portfolio-images')
+        .getPublicUrl(fileName);
+
+      if (editingExperience) {
+        setEditingExperience({ ...editingExperience, company_logo_url: publicUrl });
+      } else {
+        setNewExperience(prev => ({ ...prev, company_logo_url: publicUrl }));
+      }
+      
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      toast.success('Logo uploaded successfully!');
+    } catch (error: any) {
+      toast.error(`Failed to upload logo: ${error.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    if (editingExperience) {
+      setEditingExperience({ ...editingExperience, company_logo_url: '' });
+    } else {
+      setNewExperience(prev => ({ ...prev, company_logo_url: '' }));
+    }
+    setSelectedFile(null);
+    setPreviewUrl(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -170,20 +251,84 @@ const ExperienceManager = () => {
               />
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Period</label>
-            <Input
-              value={experienceToEdit.period}
-              onChange={(e) => {
-                if (editingExperience) {
-                  setEditingExperience({ ...editingExperience, period: e.target.value });
-                } else {
-                  setNewExperience(prev => ({ ...prev, period: e.target.value }));
-                }
-              }}
-              className="bg-gray-700 border-gray-600 text-white"
-              placeholder="2022 - Present"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Company Logo</label>
+              {previewUrl && (
+                <div className="mb-4">
+                  <img src={previewUrl} alt="Preview" className="w-24 h-24 object-contain rounded-md border border-gray-600"/>
+                </div>
+              )}
+              {experienceToEdit.company_logo_url && !previewUrl && (
+                <div className="mb-4">
+                  <img src={experienceToEdit.company_logo_url} alt="Current logo" className="w-24 h-24 object-contain rounded-md border border-gray-600"/>
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <Input
+                  id="logo-upload"
+                  type="file"
+                  onChange={handleFileSelect}
+                  className="bg-gray-700 border-gray-600 text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700"
+                  accept="image/*"
+                />
+                <Button onClick={handleImageUpload} disabled={!selectedFile || uploading} size="sm">
+                  {uploading ? 'Uploading...' : <Upload size={16} />}
+                </Button>
+                {(experienceToEdit.company_logo_url || previewUrl) && (
+                  <Button onClick={removeImage} variant="destructive" size="sm">
+                    <X size={16} />
+                  </Button>
+                )}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Period</label>
+              <Input
+                value={experienceToEdit.period}
+                onChange={(e) => {
+                  if (editingExperience) {
+                    setEditingExperience({ ...editingExperience, period: e.target.value });
+                  } else {
+                    setNewExperience(prev => ({ ...prev, period: e.target.value }));
+                  }
+                }}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="2022 - Present"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Location Type</label>
+              <Input
+                value={experienceToEdit.location_type}
+                onChange={(e) => {
+                  if (editingExperience) {
+                    setEditingExperience({ ...editingExperience, location_type: e.target.value });
+                  } else {
+                    setNewExperience(prev => ({ ...prev, location_type: e.target.value }));
+                  }
+                }}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="Hybrid"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Team Size</label>
+              <Input
+                value={experienceToEdit.team_size}
+                onChange={(e) => {
+                  if (editingExperience) {
+                    setEditingExperience({ ...editingExperience, team_size: e.target.value });
+                  } else {
+                    setNewExperience(prev => ({ ...prev, team_size: e.target.value }));
+                  }
+                }}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="Team of 5"
+              />
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
@@ -227,7 +372,7 @@ const ExperienceManager = () => {
             </Button>
             {editingExperience && (
               <Button
-                onClick={() => setEditingExperience(null)}
+                onClick={handleCancelEdit}
                 variant="outline"
                 className="border-gray-600 text-gray-300"
               >
